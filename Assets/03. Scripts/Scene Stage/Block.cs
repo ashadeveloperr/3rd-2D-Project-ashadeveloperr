@@ -41,11 +41,6 @@ namespace Babel
 
         protected virtual void Update()
         {
-            if (GameManager.IsInitialized && GameManager.Instance.IsGameOver)
-            {
-                return;
-            }
-
             IsUnderWater();
 
             if (IsFired == false)
@@ -56,11 +51,6 @@ namespace Babel
 
         protected virtual void FixedUpdate()
         {
-            if (GameManager.IsInitialized && GameManager.Instance.IsGameOver)
-            {
-                return;
-            }
-
             ApplyWind();
         }
 

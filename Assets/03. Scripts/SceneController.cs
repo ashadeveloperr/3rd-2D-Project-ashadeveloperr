@@ -26,7 +26,7 @@ namespace Babel
             Time.timeScale = 1.0f;
             Scene currentScene = SceneManager.GetActiveScene();
 
-            if (GameManager.IsInitialized && GameManager.Instance.IsGameOver)
+            if (GameManager.Instance.IsGameOver)
             {
                 SceneManager.LoadScene(currentScene.buildIndex);
             }
