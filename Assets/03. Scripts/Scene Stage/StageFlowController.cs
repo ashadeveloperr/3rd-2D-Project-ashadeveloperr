@@ -109,9 +109,10 @@ namespace Babel
             CurrentState = StageState.GameOverEffect;
             Time.timeScale = 1.0f;
 
+            // 침몰 연출은 결과창 뒤에서 계속 재생하고, 결과는 바로 띄운다.
             if (gameManager != null && gameManager.IsFailed)
             {
-                yield return gameManager.PlayGameOverEffectRoutine();
+                StartCoroutine(gameManager.PlayGameOverEffectRoutine());
             }
 
             CurrentState = StageState.Result;
