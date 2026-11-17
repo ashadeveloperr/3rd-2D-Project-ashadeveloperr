@@ -51,6 +51,10 @@ namespace Babel
         private int currentDisplayedLoot;
         private float sinkPoint;
         private float pumpPower;
+
+        // 침수 중에는 펌프가 평소 배수량의 절반만 빼냄. 예전 식(pumpPower / 100, 한 물리 스텝 0.02초마다)과 같은 값이지만
+        // 고정 스텝 길이가 바뀌어도 초당 배수량이 그대로이도록 Time.deltaTime을 곱함
+        private const float FloodingPumpRatio = 0.5f;
         private bool isGameOver;
         private bool isFailed;
         private bool hasGameOverProcessed;
@@ -360,7 +364,7 @@ namespace Babel
                 {
                     if (sinkPoint < 100)
                     {
-                        sinkPoint += Mathf.Abs(deck.position.y) * Time.deltaTime * 10f - (pumpPower / 100);
+                        sinkPoint += Mathf.Abs(deck.position.y) * Time.deltaTime * 10f - pumpPower * FloodingPumpRatio * Time.deltaTime;
                     }
                     else
                     {

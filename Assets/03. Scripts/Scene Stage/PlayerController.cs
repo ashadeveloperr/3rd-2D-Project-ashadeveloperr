@@ -11,6 +11,9 @@ namespace Babel
         [SerializeField] private float forceMultiplier = 30.0f;
         [SerializeField] private float maxForce = 150.0f;
 
+        // 앞으로 던지는 최소 수평 드래그값 (뒤로 당겨도 이 값만큼은 앞으로 날아감)
+        private const float MinLaunchDragX = 10.0f;
+
         [Header("궤적 표시")]
         [SerializeField] private LineRenderer trajectoryLine;
         [SerializeField] private int trajectoryPointCount = 30;
@@ -112,21 +115,12 @@ namespace Babel
             Vector2 dragVector = dragStartPos - currentMousePos;
             UIManager.Instance.SetCameraTarget(currentBlock.transform, UIManager.Instance.ThrowerOffset, 25f);
 
-            if (dragVector.x < 0)
-            {
-                dragVector.x = 0;
-            }
-
             if (currentBlock != null)
             {
                 currentBlock.transform.localPosition = Vector3.zero;
             }
 
-            Vector2 predictedForce = dragVector * forceMultiplier;
-            if (predictedForce.magnitude > maxForce)
-            {
-                predictedForce = predictedForce.normalized * maxForce;
-            }
+            Vector2 predictedForce = CalculateLaunchForce(dragVector);
 
             float blockMass = currentBlock != null ? currentBlock.GetComponent<Rigidbody2D>().mass : 1.0f;
             Vector2 initialVelocity = predictedForce / blockMass;
@@ -143,22 +137,31 @@ namespace Babel
             Vector2 currentMousePos = GetMouseWorldPosition();
             Vector2 dragVector = dragStartPos - currentMousePos;
 
-            if (dragVector.x < 10)
-            {
-                dragVector.x = 10;
-            }
-
-            Vector2 shootForce = dragVector * forceMultiplier;
-
-            if (shootForce.magnitude > maxForce)
-            {
-                shootForce = shootForce.normalized * maxForce;
-            }
+            Vector2 shootForce = CalculateLaunchForce(dragVector);
 
             currentBlock.Launch(shootForce, GameManager.Instance.CurrentWindSpeed);
             UIManager.Instance.SetCameraTarget(currentBlock.transform, UIManager.Instance.BlockOffset, 18f);
             StartCoroutine(SpawnDelayCoroutine(currentBlock));
             currentBlock = null;
+        }
+
+        // 조준 궤적(OnDragging)과 실제 발사(FireBlock)가 같은 보정 기준을 쓰도록 한 곳에서 계산
+        // 예전에는 궤적은 x < 0 → 0, 발사는 x < 10 → 10으로 보정해 짧게 당기면 궤적과 실제 발사가 달랐음
+        private Vector2 CalculateLaunchForce(Vector2 dragVector)
+        {
+            if (dragVector.x < MinLaunchDragX)
+            {
+                dragVector.x = MinLaunchDragX;
+            }
+
+            Vector2 launchForce = dragVector * forceMultiplier;
+
+            if (launchForce.magnitude > maxForce)
+            {
+                launchForce = launchForce.normalized * maxForce;
+            }
+
+            return launchForce;
         }
 
         private void SpawnBlock()

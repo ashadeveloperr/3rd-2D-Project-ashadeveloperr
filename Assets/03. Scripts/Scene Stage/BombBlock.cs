@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Babel
@@ -205,6 +206,8 @@ namespace Babel
             }
 
             Collider2D[] targets = Physics2D.OverlapCircleAll(transform.position, explosionRadius, explosionTargetMask);
+            // 한 Rigidbody2D에 Collider가 여러 개 붙어 있으면 OverlapCircleAll이 같은 물체를 여러 번 돌려주므로, 충격은 물체마다 한 번만
+            HashSet<Rigidbody2D> pushedBodies = new HashSet<Rigidbody2D>();
 
             foreach (Collider2D target in targets)
             {
@@ -213,7 +216,7 @@ namespace Babel
 
                 Rigidbody2D targetRigidbody = target.attachedRigidbody;
 
-                if (targetRigidbody != null)
+                if (targetRigidbody != null && pushedBodies.Add(targetRigidbody))
                 {
                     Vector2 direction = targetRigidbody.worldCenterOfMass - (Vector2)transform.position;
                     float distance = Mathf.Max(direction.magnitude, 0.1f);
