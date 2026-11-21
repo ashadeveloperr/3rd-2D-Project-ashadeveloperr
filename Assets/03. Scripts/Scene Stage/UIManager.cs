@@ -399,7 +399,7 @@ namespace Babel
             {
                 if (GameManager.Instance.IsFailed)
                 {
-                    nextStageText.SetText(TotalGameManager.Instance.IsStoryMode ? "Retry" : "Restart");
+                    nextStageText.SetText("Restart");
                     resultTitle.SetText("SUNK...");
                 }
                 else
@@ -408,11 +408,6 @@ namespace Babel
                     {
                         nextStageText.SetText("Retry");
                         resultTitle.SetText("ALIVE?");
-                    }
-                    else if (TotalGameManager.Instance.IsEndlessMode && TotalGameManager.Instance.CurrentStageLevel == 1)
-                    {
-                        nextStageText.SetText("Endless");
-                        resultTitle.SetText("STORY CLEAR!");
                     }
                     else
                     {

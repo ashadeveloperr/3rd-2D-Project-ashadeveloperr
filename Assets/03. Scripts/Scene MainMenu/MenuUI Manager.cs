@@ -166,35 +166,6 @@ namespace Babel
         }
 
 
-        public void StartStoryMode()
-        {
-            TotalGameManager.Instance.StartStoryMode();
-            LoadStageScene();
-        }
-
-        public void StartEndlessMode()
-        {
-            if (TotalGameManager.Instance.StartEndlessMode() == false)
-            {
-                return;
-            }
-
-            LoadStageScene();
-        }
-
-        private void LoadStageScene()
-        {
-            if (sceneController == null)
-            {
-                sceneController = FindAnyObjectByType<SceneController>();
-            }
-
-            if (sceneController != null)
-            {
-                sceneController.ChangeScene(SceneController.GameScene.Stage);
-            }
-        }
-
         public void ExitGame()
         {
 #if UNITY_EDITOR

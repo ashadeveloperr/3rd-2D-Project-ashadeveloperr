@@ -21,7 +21,6 @@ namespace Babel
             Paused,
             GameOverEffect,
             Result,
-            Transition,
         }
 
         public void Register(GameManager newGameManager, UIManager newUIManager)

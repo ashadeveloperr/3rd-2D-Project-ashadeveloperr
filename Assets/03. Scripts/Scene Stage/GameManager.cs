@@ -413,7 +413,6 @@ namespace Babel
 
         public IEnumerator FinalizeGameOverRoutine()
         {
-            int playedStageLevel = TotalGameManager.Instance.CurrentStageLevel;
             int maintenanceCost = TotalGameManager.Instance.TotalMaintenanceCost();
 
             if (isFailed)
@@ -496,14 +495,9 @@ namespace Babel
                 resultClosingText.SetText($"{totalClosing}");
             }
 
-            if (isFailed && TotalGameManager.Instance.IsEndlessMode)
+            if (isFailed)
             {
                 TotalGameManager.Instance.ResetProgressAfterShipwreck();
-            }
-
-            if (clearedStage && TotalGameManager.Instance.IsStoryMode && playedStageLevel >= TotalGameManager.Instance.FinalStoryStageLevel)
-            {
-                TotalGameManager.Instance.CompleteStoryModeAndPrepareEndless();
             }
 
             if (uiManager != null)
